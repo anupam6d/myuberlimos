@@ -1,4 +1,4 @@
-const Booking = require('../models/Booking');
+const supabase = require('../config/supabase');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 
@@ -12,11 +12,32 @@ const transporter = nodemailer.createTransport({
 
 exports.createBooking = async (req, res) => {
   try {
-    const booking = await Booking.create(req.body);
+    const { data: booking, error } = await supabase
+      .from('bookings')
+      .insert([{
+        name: req.body.name,
+        email: req.body.email,
+        phone: req.body.phone,
+        date: req.body.date,
+        time: req.body.time,
+        passengers: req.body.passengers,
+        vehicle: req.body.vehicle,
+        pickup: req.body.pickup,
+        dropoff: req.body.dropoff,
+        message: req.body.message || '',
+        is_quote: req.body.isQuote || false,
+        created_at: new Date().toISOString()
+      }])
+      .select()
+      .single();
+    
+    if (error) {
+      throw error;
+    }
     
     const emailData = {
       from: process.env.EMAIL_USER,
-      to: 'info@myuberlimos.com.au',
+      to: process.env.EMAIL_TO || 'das.anupam01@gmail.com',
       subject: req.body.isQuote ? 'Quote Request from MyUberLimos Website' : 'Booking Request from MyUberLimos Website',
       text: `
         Name: ${req.body.name}
@@ -71,9 +92,14 @@ exports.createBooking = async (req, res) => {
 
 exports.getBookings = async (req, res) => {
   try {
-    const bookings = await Booking.findAll({
-      order: [['createdAt', 'DESC']]
-    });
+    const { data: bookings, error } = await supabase
+      .from('bookings')
+      .select('*')
+      .order('created_at', { ascending: false });
+    
+    if (error) {
+      throw error;
+    }
     
     res.status(200).json({
       success: true,
@@ -91,7 +117,15 @@ exports.getBookings = async (req, res) => {
 
 exports.getBooking = async (req, res) => {
   try {
-    const booking = await Booking.findByPk(req.params.id);
+    const { data: booking, error } = await supabase
+      .from('bookings')
+      .select('*')
+      .eq('id', req.params.id)
+      .single();
+    
+    if (error) {
+      throw error;
+    }
     
     if (!booking) {
       return res.status(404).json({

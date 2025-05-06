@@ -3,7 +3,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const sequelize = require('./config/database');
+const supabase = require('./config/supabase');
 const bookingRoutes = require('./routes/bookingRoutes');
 const adminRoutes = require('./admin/adminRoutes');
 
@@ -35,18 +35,36 @@ const PORT = process.env.PORT || 5000;
 
 const startServer = async () => {
   try {
-    await sequelize.authenticate();
-    console.log('Database connection has been established successfully.');
+    console.log('Testing Supabase connection...');
+    const { data, error } = await supabase.auth.getSession();
     
-    await sequelize.sync();
-    console.log('Database synchronized successfully');
+    if (error) {
+      console.error('Error connecting to Supabase:', error);
+      console.log('Please check your Supabase credentials and make sure the service is available.');
+    } else {
+      console.log('Supabase connection has been established successfully.');
+      console.log('Note: Make sure to create the "bookings" table in your Supabase dashboard with the following columns:');
+      console.log('- id (type: int8, primary key, identity)');
+      console.log('- name (type: text)');
+      console.log('- email (type: text)');
+      console.log('- phone (type: text)');
+      console.log('- date (type: text)');
+      console.log('- time (type: text)');
+      console.log('- passengers (type: text)');
+      console.log('- vehicle (type: text)');
+      console.log('- pickup (type: text)');
+      console.log('- dropoff (type: text)');
+      console.log('- message (type: text, nullable)');
+      console.log('- is_quote (type: boolean, default: false)');
+      console.log('- created_at (type: timestamptz, default: now())');
+    }
     
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
       console.log(`Admin panel available at http://localhost:${PORT}/admin`);
     });
   } catch (error) {
-    console.error('Unable to connect to the database:', error);
+    console.error('Unable to start server:', error);
     process.exit(1);
   }
 };

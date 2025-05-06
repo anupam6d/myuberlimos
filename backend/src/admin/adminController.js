@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const Booking = require('../models/Booking');
+const supabase = require('../config/supabase');
 const adminViews = require('./adminViews');
 require('dotenv').config();
 
@@ -60,11 +60,23 @@ exports.verifyToken = (req, res, next) => {
 
 exports.getDashboard = async (req, res) => {
   try {
-    const totalBookings = await Booking.count();
-    const recentBookings = await Booking.findAll({
-      order: [['createdAt', 'DESC']],
-      limit: 5
-    });
+    const { count: totalBookings, error: countError } = await supabase
+      .from('bookings')
+      .select('*', { count: 'exact', head: true });
+    
+    if (countError) {
+      throw countError;
+    }
+    
+    const { data: recentBookings, error: bookingsError } = await supabase
+      .from('bookings')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(5);
+    
+    if (bookingsError) {
+      throw bookingsError;
+    }
     
     const dashboardHtml = adminViews.renderDashboard({
       totalBookings,
@@ -83,9 +95,14 @@ exports.getDashboard = async (req, res) => {
 
 exports.getAllBookings = async (req, res) => {
   try {
-    const bookings = await Booking.findAll({
-      order: [['createdAt', 'DESC']]
-    });
+    const { data: bookings, error } = await supabase
+      .from('bookings')
+      .select('*')
+      .order('created_at', { ascending: false });
+    
+    if (error) {
+      throw error;
+    }
     
     const format = req.query.format || 'json';
     
@@ -110,7 +127,15 @@ exports.getAllBookings = async (req, res) => {
 
 exports.getBookingDetails = async (req, res) => {
   try {
-    const booking = await Booking.findByPk(req.params.id);
+    const { data: booking, error } = await supabase
+      .from('bookings')
+      .select('*')
+      .eq('id', req.params.id)
+      .single();
+    
+    if (error) {
+      throw error;
+    }
     
     if (!booking) {
       return res.status(404).json({
@@ -141,7 +166,15 @@ exports.getBookingDetails = async (req, res) => {
 
 exports.deleteBooking = async (req, res) => {
   try {
-    const booking = await Booking.findByPk(req.params.id);
+    const { data: booking, error: fetchError } = await supabase
+      .from('bookings')
+      .select('*')
+      .eq('id', req.params.id)
+      .single();
+    
+    if (fetchError) {
+      throw fetchError;
+    }
     
     if (!booking) {
       return res.status(404).json({
@@ -150,7 +183,14 @@ exports.deleteBooking = async (req, res) => {
       });
     }
     
-    await booking.destroy();
+    const { error: deleteError } = await supabase
+      .from('bookings')
+      .delete()
+      .eq('id', req.params.id);
+    
+    if (deleteError) {
+      throw deleteError;
+    }
     
     return res.status(200).json({
       success: true,
