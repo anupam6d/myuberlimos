@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { Button } from './ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
 import { Input } from './ui/input'
@@ -6,6 +6,11 @@ import { Label } from './ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'
 import { Textarea } from './ui/textarea'
 import { X } from 'lucide-react'
+import emailjs from '@emailjs/browser'
+
+// Initialize EmailJS with a public key
+// Note: In production, this would be replaced with a real EmailJS public key
+emailjs.init("public_key_placeholder")
 
 interface BookingFormProps {
   isQuote?: boolean
@@ -13,6 +18,8 @@ interface BookingFormProps {
 }
 
 export function BookingForm({ isQuote = false, onClose }: BookingFormProps) {
+  const formRef = useRef<HTMLFormElement>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -37,8 +44,61 @@ export function BookingForm({ isQuote = false, onClose }: BookingFormProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    alert('Thank you for your booking request. We will contact you shortly to confirm your reservation.')
-    onClose()
+    setIsSubmitting(true)
+    
+    const bookingData = {
+      ...formData,
+      isQuote
+    }
+    
+    const emailData = {
+      to_email: 'info@myuberlimos.com.au',
+      from_name: formData.name,
+      from_email: formData.email,
+      subject: isQuote ? 'Quote Request from MyUberLimos Website' : 'Booking Request from MyUberLimos Website',
+      message: `
+        Name: ${formData.name}
+        Email: ${formData.email}
+        Phone: ${formData.phone}
+        Date: ${formData.date}
+        Time: ${formData.time}
+        Passengers: ${formData.passengers}
+        Vehicle: ${formData.vehicle}
+        Pickup: ${formData.pickup}
+        Dropoff: ${formData.dropoff}
+        Additional Information: ${formData.message}
+      `
+    }
+    
+    fetch(window.location.hostname === 'localhost' ? 'http://localhost:5000/api/bookings' : 'https://myuberlimos-backend.fly.dev/api/bookings', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(bookingData),
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log('Booking saved to database:', data);
+      
+      console.log('Email would be sent with the following data:', emailData);
+      return Promise.resolve({ status: 200, text: 'OK' });
+    })
+    .then(() => {
+      alert('Thank you for your booking request. We will contact you shortly to confirm your reservation.');
+      setIsSubmitting(false);
+      onClose();
+    })
+    .catch((error) => {
+      console.error('Error processing booking:', error);
+      alert('There was an error sending your request. Please try again or contact us directly.');
+      setIsSubmitting(false);
+    })
   }
 
   return (
@@ -57,7 +117,7 @@ export function BookingForm({ isQuote = false, onClose }: BookingFormProps) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Full Name *</Label>
@@ -192,8 +252,9 @@ export function BookingForm({ isQuote = false, onClose }: BookingFormProps) {
               <Button 
                 type="submit" 
                 className="w-full bg-amber-500 hover:bg-amber-600 text-white"
+                disabled={isSubmitting}
               >
-                {isQuote ? 'Request Quote' : 'Book Now'}
+                {isSubmitting ? 'Submitting...' : isQuote ? 'Request Quote' : 'Book Now'}
               </Button>
             </div>
           </form>
