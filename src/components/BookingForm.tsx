@@ -52,7 +52,7 @@ export function BookingForm({ isQuote = false, onClose }: BookingFormProps) {
     }
     
     const emailData = {
-      to_email: 'info@myuberlimos.com.au',
+      to_email: 'das.anupam01@gmail.com',
       from_name: formData.name,
       from_email: formData.email,
       subject: isQuote ? 'Quote Request from MyUberLimos Website' : 'Booking Request from MyUberLimos Website',
@@ -70,7 +70,7 @@ export function BookingForm({ isQuote = false, onClose }: BookingFormProps) {
       `
     }
     
-    fetch(window.location.hostname === 'localhost' ? 'http://localhost:5000/api/bookings' : 'https://myuberlimos-backend.fly.dev/api/bookings', {
+    fetch(window.location.hostname === 'localhost' ? 'http://localhost:5000/api/bookings' : 'https://chauffeur-service-website-tunnel-fe8v84ox.devinapps.com/api/bookings', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
