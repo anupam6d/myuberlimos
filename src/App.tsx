@@ -1,12 +1,25 @@
 import './App.css'
+import { useState } from 'react'
 import { Button } from './components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './components/ui/card'
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from './components/ui/navigation-menu'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/tabs'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from './components/ui/carousel'
 import { PhoneCall, Mail, MapPin, Car, Calendar, Clock, Award, Users, Star } from 'lucide-react'
+import { BookingForm } from './components/BookingForm'
 
 function App() {
+  const [showBookingForm, setShowBookingForm] = useState(false)
+  const [isQuote, setIsQuote] = useState(false)
+
+  const handleOpenBooking = (quote = false) => {
+    setIsQuote(quote)
+    setShowBookingForm(true)
+  }
+
+  const handleCloseBooking = () => {
+    setShowBookingForm(false)
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -94,7 +107,10 @@ function App() {
               </NavigationMenuList>
             </NavigationMenu>
 
-            <Button className="bg-amber-500 hover:bg-amber-600 text-white">
+            <Button 
+              className="bg-amber-500 hover:bg-amber-600 text-white"
+              onClick={() => handleOpenBooking(false)}
+            >
               Book Online
             </Button>
           </div>
@@ -110,10 +126,17 @@ function App() {
                 <h1 className="text-4xl md:text-5xl font-bold mb-4">Premium Chauffeur Services</h1>
                 <p className="text-xl mb-8">Experience luxury transportation with our professional chauffeurs and premium vehicles</p>
                 <div className="flex space-x-4">
-                  <Button className="bg-amber-500 hover:bg-amber-600 text-white">
+                  <Button 
+                    className="bg-amber-500 hover:bg-amber-600 text-white"
+                    onClick={() => handleOpenBooking(false)}
+                  >
                     Book Online
                   </Button>
-                  <Button variant="outline" className="bg-transparent border-white text-white hover:bg-white hover:text-gray-900">
+                  <Button 
+                    variant="outline" 
+                    className="bg-transparent border-white text-white hover:bg-white hover:text-gray-900"
+                    onClick={() => handleOpenBooking(true)}
+                  >
                     Get a Quote
                   </Button>
                 </div>
@@ -326,10 +349,17 @@ function App() {
             Book your premium chauffeur service today and travel in style, comfort, and safety.
           </p>
           <div className="flex justify-center space-x-4">
-            <Button className="bg-amber-500 hover:bg-amber-600 text-white">
+            <Button 
+              className="bg-amber-500 hover:bg-amber-600 text-white"
+              onClick={() => handleOpenBooking(false)}
+            >
               Book Online
             </Button>
-            <Button variant="outline" className="bg-transparent border-white text-white hover:bg-white hover:text-gray-900">
+            <Button 
+              variant="outline" 
+              className="bg-transparent border-white text-white hover:bg-white hover:text-gray-900"
+              onClick={() => handleOpenBooking(false)}
+            >
               Contact Us
             </Button>
           </div>
@@ -386,7 +416,7 @@ function App() {
               <ul className="space-y-2">
                 <li className="flex items-center">
                   <MapPin className="h-5 w-5 mr-2 text-amber-500" />
-                  123 Main Street, Sydney, Australia
+                  7 Paior Cct Epping VIC 3076
                 </li>
                 <li className="flex items-center">
                   <PhoneCall className="h-5 w-5 mr-2 text-amber-500" />
@@ -404,6 +434,14 @@ function App() {
           </div>
         </div>
       </footer>
+
+      {/* Booking Form Modal */}
+      {showBookingForm && (
+        <BookingForm 
+          isQuote={isQuote} 
+          onClose={handleCloseBooking} 
+        />
+      )}
     </div>
   )
 }
