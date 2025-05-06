@@ -1,17 +1,31 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const path = require('path');
+const cookieParser = require('cookie-parser');
 const sequelize = require('./config/database');
 const bookingRoutes = require('./routes/bookingRoutes');
+const adminRoutes = require('./admin/adminRoutes');
 
 dotenv.config();
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
 app.use(express.json());
+app.use(cookieParser());
+
+app.use(express.static(path.join(__dirname, '../public')));
 
 app.use('/api/bookings', bookingRoutes);
+app.use('/admin', adminRoutes);
+
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/admin/login.html'));
+});
 
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
@@ -29,6 +43,7 @@ const startServer = async () => {
     
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
+      console.log(`Admin panel available at http://localhost:${PORT}/admin`);
     });
   } catch (error) {
     console.error('Unable to connect to the database:', error);

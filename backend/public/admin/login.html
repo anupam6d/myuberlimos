@@ -45,7 +45,10 @@
       const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
       
-      fetch('/admin/login', {
+      // Get the current base URL
+      const baseUrl = window.location.origin;
+      
+      fetch(`${baseUrl}/admin/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -58,7 +61,7 @@
           // Store token in localStorage
           localStorage.setItem('token', data.token);
           // Redirect to dashboard
-          window.location.href = '/admin/dashboard';
+          window.location.href = `${baseUrl}/admin/dashboard`;
         } else {
           // Show error message
           const errorMessage = document.getElementById('errorMessage');
