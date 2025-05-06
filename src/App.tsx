@@ -18,9 +18,9 @@ function App() {
               <Mail className="h-4 w-4 mr-1" />
               info@myuberlimos.com
             </a>
-            <a href="tel:+61412345678" className="flex items-center text-sm">
+            <a href="tel:+61450650490" className="flex items-center text-sm">
               <PhoneCall className="h-4 w-4 mr-1" />
-              +61 412 345 678
+              +61 450 650 490
             </a>
           </div>
         </div>
@@ -39,7 +39,7 @@ function App() {
             <NavigationMenu>
               <NavigationMenuList>
                 <NavigationMenuItem>
-                  <NavigationMenuLink href="#" className="px-3 py-2 text-gray-700 hover:text-gray-900">
+                  <NavigationMenuLink href="#home" className="px-3 py-2 text-gray-700 hover:text-gray-900">
                     Home
                   </NavigationMenuLink>
                 </NavigationMenuItem>
@@ -47,16 +47,16 @@ function App() {
                   <NavigationMenuTrigger>Our Services</NavigationMenuTrigger>
                   <NavigationMenuContent>
                     <div className="grid w-[400px] gap-3 p-4">
-                      <NavigationMenuLink href="#" className="block p-2 hover:bg-gray-100 rounded">
+                      <NavigationMenuLink href="#services" className="block p-2 hover:bg-gray-100 rounded">
                         Airport Transfers
                       </NavigationMenuLink>
-                      <NavigationMenuLink href="#" className="block p-2 hover:bg-gray-100 rounded">
+                      <NavigationMenuLink href="#services" className="block p-2 hover:bg-gray-100 rounded">
                         Corporate Travel
                       </NavigationMenuLink>
-                      <NavigationMenuLink href="#" className="block p-2 hover:bg-gray-100 rounded">
+                      <NavigationMenuLink href="#services" className="block p-2 hover:bg-gray-100 rounded">
                         Wedding Transportation
                       </NavigationMenuLink>
-                      <NavigationMenuLink href="#" className="block p-2 hover:bg-gray-100 rounded">
+                      <NavigationMenuLink href="#services" className="block p-2 hover:bg-gray-100 rounded">
                         Special Events
                       </NavigationMenuLink>
                     </div>
@@ -66,28 +66,28 @@ function App() {
                   <NavigationMenuTrigger>Our Fleet</NavigationMenuTrigger>
                   <NavigationMenuContent>
                     <div className="grid w-[400px] gap-3 p-4">
-                      <NavigationMenuLink href="#" className="block p-2 hover:bg-gray-100 rounded">
+                      <NavigationMenuLink href="#fleet" className="block p-2 hover:bg-gray-100 rounded">
                         Luxury Sedans
                       </NavigationMenuLink>
-                      <NavigationMenuLink href="#" className="block p-2 hover:bg-gray-100 rounded">
+                      <NavigationMenuLink href="#fleet" className="block p-2 hover:bg-gray-100 rounded">
                         SUVs
                       </NavigationMenuLink>
-                      <NavigationMenuLink href="#" className="block p-2 hover:bg-gray-100 rounded">
+                      <NavigationMenuLink href="#fleet" className="block p-2 hover:bg-gray-100 rounded">
                         Stretch Limousines
                       </NavigationMenuLink>
-                      <NavigationMenuLink href="#" className="block p-2 hover:bg-gray-100 rounded">
+                      <NavigationMenuLink href="#fleet" className="block p-2 hover:bg-gray-100 rounded">
                         Premium Vans
                       </NavigationMenuLink>
                     </div>
                   </NavigationMenuContent>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
-                  <NavigationMenuLink href="#" className="px-3 py-2 text-gray-700 hover:text-gray-900">
+                  <NavigationMenuLink href="#about" className="px-3 py-2 text-gray-700 hover:text-gray-900">
                     About Us
                   </NavigationMenuLink>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
-                  <NavigationMenuLink href="#" className="px-3 py-2 text-gray-700 hover:text-gray-900">
+                  <NavigationMenuLink href="#contact" className="px-3 py-2 text-gray-700 hover:text-gray-900">
                     Contact
                   </NavigationMenuLink>
                 </NavigationMenuItem>
@@ -102,7 +102,7 @@ function App() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative">
+      <section id="home" className="relative">
         <div className="h-[600px] bg-cover bg-center" style={{ backgroundImage: "url('/images/hero.jpg')" }}>
           <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center">
             <div className="container mx-auto px-4">
@@ -124,7 +124,7 @@ function App() {
       </section>
 
       {/* Main Content */}
-      <section className="py-16 bg-gray-50">
+      <section id="about" className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Welcome to MyUberLimos</h2>
@@ -140,7 +140,7 @@ function App() {
               <TabsTrigger value="fleet">Our Fleet</TabsTrigger>
               <TabsTrigger value="why-us">Why Choose Us</TabsTrigger>
             </TabsList>
-            <TabsContent value="services" className="mt-6">
+            <TabsContent id="services" value="services" className="mt-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card>
                   <CardHeader>
@@ -188,7 +188,7 @@ function App() {
                 </Card>
               </div>
             </TabsContent>
-            <TabsContent value="fleet" className="mt-6">
+            <TabsContent id="fleet" value="fleet" className="mt-6">
               <Carousel className="w-full">
                 <CarouselContent>
                   <CarouselItem className="md:basis-1/2 lg:basis-1/3">
@@ -271,7 +271,7 @@ function App() {
       </section>
 
       {/* Testimonials */}
-      <section className="py-16 bg-white">
+      <section id="testimonials" className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">What Our Clients Say</h2>
@@ -319,7 +319,7 @@ function App() {
       </section>
 
       {/* Call to Action */}
-      <section className="py-16 bg-gray-900 text-white">
+      <section id="contact" className="py-16 bg-gray-900 text-white">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-6">Ready to Experience Luxury Transportation?</h2>
           <p className="text-xl mb-8 max-w-2xl mx-auto">
@@ -390,7 +390,7 @@ function App() {
                 </li>
                 <li className="flex items-center">
                   <PhoneCall className="h-5 w-5 mr-2 text-amber-500" />
-                  +61 412 345 678
+                  +61 450 650 490
                 </li>
                 <li className="flex items-center">
                   <Mail className="h-5 w-5 mr-2 text-amber-500" />
